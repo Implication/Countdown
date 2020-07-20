@@ -26,9 +26,10 @@ function App() {
   let [min, setMin] = useState(0);
   let [seconds, setSeconds] = useState(0);
   let [isPaused, setPaused] = useState(true);
+  let [timerStarted, setTimerStarted] = useState(false);
   let [isHalf, setHalf] = useState(false);
   let [speed, setSpeed] = useState(1000);
-  let [displayMessage, setDisplayMessage] = useState("");
+  let [displayMessage, setDisplayMessage] = useState("Time's Up!");
   let interval = null;
   let halfway = null;
   let [buttonState, setButtonState] = useState("Pause");
@@ -62,7 +63,6 @@ function App() {
         }
         //Halfway Check in interval
         if (minutes / 2 >= min && seconds === 0 && minutes % 2 === 0) {
-          setHalf(true);
           setDisplayMessage("More than halfway there!");
         }
         if (minutes / 2 >= min && seconds <= 30 && minutes % 2 !== 0) {
@@ -71,7 +71,6 @@ function App() {
         }
         if (min === 0 && seconds <= 20) {
           document.querySelector(".displayMessage").classList.add("red");
-          console.log("????");
         }
         //Blinker when seconds reach 10 seconds
         if (min === 0 && seconds <= 10) {
@@ -83,7 +82,7 @@ function App() {
       clearInterval(interval);
     };
     console.log("Check");
-  }, [isPaused, min, seconds, interval, displayMessage, isHalf]);
+  }, [isPaused, min, seconds, interval, displayMessage, setHalf]);
 
   //Function Purpose, essentially an event listener that toggles the pause boolean to false
   function startTimer(e) {
@@ -92,7 +91,11 @@ function App() {
 
   //Event listener that grabs the variable in out input text box
   function getMinutes(e) {
-    setMin(parseInt(e.target.value));
+    if (e.target.value !== "") {
+      setMin(parseInt(e.target.value));
+    } else {
+      setMin(0);
+    }
   }
 
   //This function allows us to change the speed of how fast the intervals change.
@@ -119,20 +122,20 @@ function App() {
           placeholder="(min)"
           id="minuteInput"
           onChange={getMinutes}></input>
-        <button class="btn btn-start" onClick={startTimer}>
+        <button class="btn btn-row btn-start" onClick={startTimer}>
           Start
         </button>
       </div>
       {isHalf ? <p class="displayMessage">{displayMessage}</p> : <br />}
       <Timer min={min} sec={seconds} />
       <Pause value={buttonState} toggle={toggle} />
-      <button class="btn btn-speed" onClick={() => Speed(1000)}>
+      <button class="btn btn-row btn-speed" onClick={() => Speed(1000)}>
         1x
       </button>
-      <button class="btn btn-speed" onClick={() => Speed(666)}>
+      <button class="btn btn-row btn-speed" onClick={() => Speed(666)}>
         1.5x
       </button>
-      <button class="btn btn-speed" onClick={() => Speed(333)}>
+      <button class="btn btn-row btn-speed" onClick={() => Speed(333)}>
         2x
       </button>
     </div>
